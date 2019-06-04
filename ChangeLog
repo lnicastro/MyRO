@@ -1,0 +1,105 @@
+2019-05-31 Luciano Nicastro <luciano.nicastro@inaf.it>, ver. 0.3.2-alpha4
+	- Update libmyro.cc to manage MySQL versions > 5.1.
+	- Porting to GitHub.
+
+2011-06-09 Luciano Nicastro <nicastro@iasfbo.inaf.it>, ver. 0.3.2-alpha3
+	- Correctly manage shared lib. extension -> .dylib for Darwin.
+
+2011-02-18 Luciano Nicastro <nicastro@iasfbo.inaf.it>, ver. 0.3.2-alpha3
+	- Added procedure myro.rows_count (see sql/udf.sql).
+
+2008-02-23 Giorgio Calderone <gcalderone@ifc.inaf.it>, ver. 0.3.2-alpha3
+	- Bug fix.
+
+2008-02-07  Giorgio Calderone <gcalderone@ifc.inaf.it>, ver. 0.3.2-alpha2
+	- Fixed a bug due to a change in the way MySQL calls external
+	functions.
+
+	- Fixed a bug during creation of extended views.
+
+2007-11-11  Giorgio Calderone <gcalderone@ifc.inaf.it>, ver. 0.3.2-alpha1
+	- First release of MYRO as a standalone package, until now it has
+	been a part of the MCS project.
+	
+2007-01-09  Giorgio Calderone <gcalderone@ifc.inaf.it>, ver. 0.1.1
+	- MyRO: the query behind the view are now simpler, thanks to the
+	new features of MySQL's optimizer;
+
+	- The "--remprotect" option of the script "myro" no longer drops
+	the fields my_uid, my_gid and my_perm from the protected table,
+	while the "--protect" option no longer fails when this fields
+	already exists. These behaviours allows to recreate the views for
+	a table without any loss of information;
+
+	- MyRO will no longer rename a table to protect it, and the names
+	of the view to access a protected table are no longer
+	hardcoded. For this reason the "--protect" option named above
+	requires now an extra parameter that is just the name of the views
+	to be created;
+
+	- A new option is available for MyRO: "--udf" to recreate all UDF;
+	
+2005-11-24  Giorgio Calderone <gcalderone@ifc.inaf.it>, ver. 0.0.7
+	- The myro script now uses the DBD/DBI interface to MySQL. Look in
+	the "doc" directory for instructions on how to install this
+	module.
+
+	- You can now create myro user account even if they aren't created
+	as MySQL account. Myro will automatically create the necessary
+	MySQL accounts.
+
+	- When asked for the default group for a user you can simply give
+	an empty string, the default group will have the same name as the
+	user.
+
+	- A new field has been added "my_usr.email". It is not used by
+	MYRO, so it is user responsibility to fill it.
+
+	- A new table will be created: "myro". It will contain information
+	about myro installation, for example which version has treated the
+	DB on last execution.
+
+	- A new feature has been added: MYRO can recognize if it has been
+	updated so that it will automatically modify the database
+	structure to add missing fields and tables. In this case the table
+	"myro" and the field "my_usr.email" will be created.
+
+	- Some procedures had turned into functions because of perl module
+	limitations: myf_loadpriv and myf_assign_usr_to_grp.
+
+	- When the "--restore" option is given myro check that the mysql
+	server is running before trying to shit it down.
+	
+2005-09-29  Giorgio Calderone <gcalderone@pa.iasf.cnr.it>, ver. 0.0.6
+	- The myro script has two new options: --backup and --restore by
+	which users can perform backup of databases and related privileges
+	for future restores.
+
+	- New procedure: myp_print_priv(usr), to get a dump of all users
+	privileges.
+	
+2005-09-12  Giorgio Calderone <gcalderone@pa.iasf.cnr.it>, ver. 0.0.5
+	- A default group with gid = 1 is created when installing myro:
+	anygroup. Members of this group are automatically members of any
+	group created inside myro.
+
+2005-09-12  Giorgio Calderone <gcalderone@pa.iasf.cnr.it>, ver. 0.0.4
+	- Some functions had its name changed to uniform the rules with C
+	functions. 
+
+	- All functions and procedure are now documented.
+
+2005-09-02  Giorgio Calderone <gcalderone@pa.iasf.cnr.it>, ver. 0.0.3
+	- New command option for myro: --test
+
+2005-08-29  Giorgio Calderone <gcalderone@pa.iasf.cnr.it>, ver. 0.0.2
+
+	- New version of the myro script.
+
+	- Now only one view is used both for reading and writing: my_*.
+
+	- Two new views are defined: mylong_* and myls_*.
+
+2005-07-26  Giorgio Calderone <gcalderone@pa.iasf.cnr.it>, ver. 0.0.1
+
+	- First release of myro.

@@ -1,0 +1,927 @@
+% ----------------------------------------------------------------------^
+% Copyright (C) 2004, 2005, 2006, 2007 Giorgio Calderone <gcalderone@ifc.inaf.it>
+% 
+% This file is part of MYRO.
+% 
+% MYRO is free software; you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation; either version 2 of the License, or
+% (at your option) any later version.
+% 
+% MYRO is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+% 
+% You should have received a copy of the GNU General Public License
+% along with MYRO; if not, write to the Free Software
+% Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+% 
+% ----------------------------------------------------------------------$
+
+
+\documentclass[12pt,titlepage]{article}
+
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{framed}
+\usepackage{listings}
+
+\usepackage{a4wide}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\renewcommand{\footrulewidth}{0.4pt}
+
+%LN
+%\renewcommand{\sectionmark}[1]{\markright{\thesection.\ #1}}
+%\renewcommand{\sectionmark}[1]{\markright{#1}}
+%\renewcommand{\subsectionmark}[1]{\markright{#1}}
+%\parindent 0pt
+
+
+%\textheight 22cm
+%\textwidth 16.5cm
+%\topmargin 0cm
+%\oddsidemargin -0.5cm
+%\evensidemargin -0.5cm
+%\sloppy
+
+\newcommand{\myro}{\textbf{MyRO} }
+
+\def\ver{Ver. \input{../version}}
+\def\url{http://ross.iasfbo.inaf.it/myro}
+
+\newcommand{\syntax}[1]
+{
+  \bigskip
+  \noindent
+  \textbf{Syntax: } \\ 
+  \indent \texttt{#1}
+}
+
+\newenvironment{parameters}
+{
+  \bigskip
+  \noindent
+  \textbf{Parameters:}
+  \begin{enumerate}
+}
+{
+  \end{enumerate}
+}
+
+\newcommand{\param}[2]
+{
+  \item \textit{#1} \texttt{#2} 
+}
+
+\newcommand{\return}[1]
+{
+  \bigskip
+  \noindent
+  \textbf{Return value} (\texttt{#1}): \\
+  \indent
+}
+
+
+
+
+\begin{document}
+\lstloadlanguages{[ISO]C++}
+\lstset{
+  language=c++,
+  frame=leftline,
+  escapeinside={//(}{)},
+  morekeywords={string},
+  keywordstyle=\bfseries, stringstyle=\ttfamily, commentstyle=\textit,
+  numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=5pt,
+  showstringspaces=false, emphstyle=\underbar,
+  captionpos=b,
+  aboveskip=3mm,
+  belowskip=3mm,
+  xleftmargin=0.5cm,
+  emph={
+        TINY,SMALL,MEDIUM,INT,BIGINT,FLOAT,DOUBLE,STRING,TIME,TINY_BLOB,BLOB
+        ,AccumBuffer
+        ,B64_Codec
+        ,BaseThread
+        ,Binary
+        ,Client
+        ,ClientInfo
+        ,Column
+        ,CommandParser
+        ,Conf
+        ,Coosys
+        ,Data
+        ,DBConn
+        ,Definitions
+        ,Description
+        ,Dynamic_Array
+        ,Element
+        ,Env
+        ,Event
+        ,Field
+        ,FieldRef
+        ,Fits
+        ,Group
+        ,HostInfo
+        ,Info
+        ,Link
+        ,LocalThread
+        ,Max
+        ,Min
+        ,NetInterface
+        ,NodePointer
+        ,Option
+        ,Param
+        ,ParamRef
+        ,Parser_Stream
+        ,Parser_Table
+        ,Parser_Tree
+        ,Pipe
+        ,Query
+        ,Record
+        ,RecordSet
+        ,Resource
+        ,Row
+        ,Serializable
+        ,Server
+        ,ServerSocket
+        ,Socket
+        ,Stream
+        ,Synchro
+        ,Table
+        ,Tabledata
+        ,Thread
+        ,URLReader
+        ,UserThread
+        ,Values
+        ,VOTable
+        ,VOTableReaderSplit
+        ,Writer_Stream
+        ,mcs
+        ,mcsStart
+        ,mcsWait
+        ,mcsCustomStart
+        }
+}
+
+
+\title{
+%
+\textbf{MYRO \\ My Record Oriented \\ privilege system}
+%
+%\thanks{\url}
+%
+%\begin{center}
+%\vspace{0.8cm}
+%\includegraphics[width=5cm,keepaspectratio]{mcslogo} \\
+%\vspace{0.8cm}
+%\end{center}
+%
+\centerline{\rule{\textwidth}{0.4pt}}
+%
+}
+\bigskip
+\author{
+  \sc{Giorgio Calderone} \\
+  %\footnote{Giorgio Calderone $<$gcalderone@ifc.inaf.it$>$}  \\
+  \sc{IFC - INAF Palermo, Italy} \\ \\
+  \sc{Luciano Nicastro} \\
+  %\footnote{Luciano Nicastro $<$nicastro@iasfbo.inaf.it$>$} \\
+  \sc{IASF - INAF Bologna, Italy} \\
+ }
+\date{\today \\
+      \ver \\
+      \url \\
+      \centerline{\rule{\textwidth}{0.4pt}}
+     }
+\maketitle
+
+\thispagestyle{empty}
+~
+
+\vfill
+{\it\small This page intentionally left blank.}
+
+\newpage
+\pagenumbering{roman}
+
+\tableofcontents
+
+\newpage
+\pagenumbering{arabic}
+%\mainmatter
+
+\section{Introduction}
+
+\section{\myro: My Record Oriented privilege system}
+\myro is the name we use to refer to a technique used to implement a
+database privilege system on a per-record basis on the MySQL database.
+Actually all database servers implement a privilege system based on
+tables or columns, that is if a user has grants to access a certain
+table (or a table's column) he can access all records of that table
+(or that table's column). \myro lets you specify grants on a record
+level so a user can access only those records it is allowed to
+``select/update/delete''. A
+consequence of this is that different users reading the same table
+will see different records. The grant mechanism provided by \myro is
+similar to that of a Unix file system, that is each record belongs to
+a ``owner'' and a ``group'' and has three sets of permissions
+associated (for the owner, the users belonging to the group and all
+other users) that specify if that record can be read and/or written.
+
+\smallskip
+The software components of \myro are a Perl script used to perform
+administrative tasks, a C library and a set of MySQL functions. The
+process of protecting tables is completely transparent to the final
+user, that is once \myro has been installed and configured by the
+database administrator, users can access the database without even
+know that \myro is working.
+%
+%
+%MySQL\footnote{http://www.mysql.com} provide a sophisticated privilege
+%system able to give users grant on a per database, table and column
+%basis. Nevertheless it doesn’t provide any feature to implement a per-
+%record privilege. In this document we’ll explain how to reach this
+%goal using \myro, a record oriented privilege system. The goal of
+%\myro is to implement a privilege system similar to the one used in
+%any Unix file system. With each record of a protected table will be
+%stored an extra information regarding the user and group who owns that
+%record, and the permission specification. The last information is a
+%number which specifies the \verb|READ| or \verb|WRITE| permission for
+%the owner of the record, users of the group to which the record
+%belongs, and all other users.  A typical permission specification
+%looks like this:
+%%
+%\begin{verbatim}
+%    rwr---
+%\end{verbatim}
+%%
+%This sequence of six character represent the permission specification
+%for the owner itself (first two character), the group (third and
+%fourth), and all other users (fifth and sixth). The letter ’r’ means
+%read permission, the letter ’w’ means write permission.
+
+
+
+%---------------------------------------------------------------------
+\newpage
+\section{\myro installation}
+
+The \myro software library is distributed in a \verb|tar.gz| package.
+You can find the latest version at \url. To unpack the package simply
+issue the command:
+%
+\begin{verbatim}
+    tar xvzf myro-x.y.z.tar.gz
+\end{verbatim}
+%
+where \verb|x|, \verb|y|, \verb|z| are the version number (namely the
+first number is the major revision, the second number is the version,
+and third number is the subversion). A directory named
+\verb|myro-x.y.z| will be created containing all sources code as well
+as the documentation and the scripts needed to install \myro. Before
+installing \myro you should check that all mandatory dependencies are
+satisfied (see Sect. \ref{sec:Dependencies}), then you must follow a
+three step procedure: Configure, Compile and Installing \myro.
+
+\subsection{Dependencies}
+\label{sec:Dependencies}
+The only mandatory packages required by \myro are:
+
+\begin{itemize}
+\item MySQL sources (\verb|http://www.mysql.org|, version 5.1.20 later);
+\item Perl (\verb|http://www.perl.com/|);
+\item The \verb|DBD::mysql| perl module;
+\end{itemize}
+
+\noindent
+The \verb|DBD::mysql| perl module can be easily installed through the
+\verb|cpan| utility issuing the following command:
+%
+\begin{verbatim}
+  install DBD::mysql
+\end{verbatim}
+%
+See the \verb|cpan| documentation for further informations. If these
+package are not already installed in the system you should install
+them before continuing.
+
+
+\subsection{Installing \myro}
+\label{sec:installing}
+
+\subsubsection{Configure}
+\label{sec:configuremyro}
+Configuring \myro means checking your system for compatibilities,
+search for include files and libraries, and finally produce all
+necessary \textsf{Makefile}s needed to compile \myro. This is done
+automatically by the distributed \verb|configure| script. Typically
+you can use this script without any option, as follows:
+
+\begin{verbatim}
+    ./configure
+\end{verbatim}
+
+\noindent
+Anyway \verb|configure| has a lot of options and switches (type
+\verb|configure --help| for a list) to customize the compilation step.
+For further documentation see the \verb|INSTALL| file.
+
+%
+\subsubsection{Compile}
+\label{sec:compilemyro}
+To compile \myro, once the \verb|configure| script has been correctly
+executed, simply issue the command:
+%
+\begin{verbatim}
+    make
+\end{verbatim}
+%
+If you got errors while compiling check Sect. \ref{sec:configuremyro}
+and the \verb|INSTALL| file.
+
+
+\subsubsection{Install}
+\label{sec:installmyro}
+If \myro has been correctly compiled you can install with the command:
+%
+\begin{verbatim}
+    make install
+\end{verbatim}
+%
+If your account doesn't have the permission to write in the path where
+it should be installed then you'll get an error. In this case you
+should login as ``root'' and retry.
+
+
+%---------------------------------------------------------------------
+\newpage
+\section{How it works}
+Suppose the table to be protected is called \verb|mytable_data|. \myro
+adds three fields to the table to store information about the owner
+and group to which the records belong, and for the permissions. Then
+it installs three triggers on the table associated with the INSERT,
+UPDATE and DELETE events, and finally creates a view\footnote{Views
+  are database objects just like tables, except that they don't
+  require disk space because their data is read from the actual tables.}
+with a custom name (for example \verb|mytable|) with a simple \verb|SELECT *|
+statement and a \verb|WHERE| clause that filter the records readable by the
+user executing the query. This way the next time users will access
+\verb|mytable| they will access the view, not the underlying table,
+and they will see only the records they're allowed to read or write.
+When a user tries to write on a table the corresponding trigger will
+be activated for each record being modified, to check if the user has
+grants to modify the record.
+
+%
+\subsection{Users, groups and permissions}
+Users and groups used in \myro are completely analogous to those of a
+Unix file system. Each MySQL account has a unique user id (\verb|uid|)
+and can be a member of any number of groups, each associated with a
+unique group id (\verb|gid|). Furthermore to each MySQL users is
+associated a flag that tells if the user is a ``super-user'', in this
+case all permission checking will be disabled. \myro automatically
+handles its internal tables where all \verb|uid|, group definition
+and group membership are stored. Also each record in a table protected
+by \myro has three fields which contain the \verb|uid| of the owner,
+the \verb|gid| of the group owning that record, and a permission
+specification, that is a numerical code that specify if that record
+can be read and/or written by three categories of users: owner of the
+record, member of the group to which the record belongs to and all
+other users. \myro uses all these information to determine if a
+record can be read and/or written. The permission specification is a
+sequence of 6 bits whose meaning are as follows (from the least
+to the most significant bit):
+%
+\begin{itemize}
+\item write permission for owner;
+\item read permission for owner;
+\item write permission for members of the group;
+\item read permission for members of the group;
+\item write permission for all other users;
+\item read permission for all other users;
+\end{itemize}
+
+\myro has a function to properly convert a permission specification to
+a more readable string representation of the grants:
+%
+\begin{verbatim}
+mysql> select myro.fmtPerm(43);
++------------------+
+| myro.fmtPerm(43) |
++------------------+
+| rwr-r-           | 
++------------------+
+1 row in set (0.01 sec)
+\end{verbatim}
+%
+in which the two first characters refer to the owner, the third and
+fourth to the members of the group and the last two characters to all
+other users. Also \myro automatically creates a group named
+\verb|anygroup|. Members of this group are automatically members of
+any other group. This feature is necessary when you are dealing with
+many groups creation and destroy, and you know that a user must be
+member of all of this groups. Assigning the user to this group means
+it is member of any group, even if they are created after the user has
+been assigned to \verb|anygroup|.
+
+
+%---------------------------------------------------------------------
+\newpage
+\section{\myro usage}
+All administrative tasks related to \myro, like protecting tables or
+manipulating groups, can be performed using the the \verb|myro|
+script. All available options can be displayed using the command:
+%
+\begin{verbatim}
+  myro --help
+\end{verbatim}
+%
+Before using \myro it is necessary to install the functions in the
+MySQL database server (version $>= 5.1.20$) with the command:
+%
+\begin{verbatim}
+  myro --install
+\end{verbatim}
+%
+The password of the MySQL root account will be asked. This command
+also creates a database named \verb|myro| which contains all \myro
+internal tables.
+
+%
+\subsection{Implementing the privilege system}
+Once \myro has been installed in the database server all MySQL users
+will already have a \verb|uid| and a default group to which they
+belong whose name is the same as the account username. Furthermore
+the group \verb|anygroup| will automatically be created. The steps
+needed to implement the privilege system are as follows:
+%
+\begin{itemize}
+\item creates all needed groups;
+\item modify users membership to groups;
+\item protect tables;
+\item check that all users' grants are consistent.
+\end{itemize}
+%
+These operations are discussed in the next sections.
+
+%
+\subsubsection{Handle groups}
+A new group can be created using the following command:
+%
+\begin{verbatim}
+myro --addgroup <GroupName> [<Description>]
+\end{verbatim}
+%
+To delete a group use the command:
+%
+\begin{verbatim}
+myro --delgroup <GroupName>
+\end{verbatim}
+%
+To see a list of defined groups issue the following SQL statement from
+a MySQL terminal:
+%
+\begin{verbatim}
+call myro.groups();
+\end{verbatim}
+
+%
+\subsubsection{Modify user's properties}
+With the following command it is possible to modify the default group
+to which a user belongs, specify if it is a ``super-user'', provide a
+description and an e-mail address:
+%
+\begin{verbatim}
+myro --moduser <UserName> [<Group> [<Su> [<Description> [<Email>]]]]
+\end{verbatim}
+%
+To assign a user to a group use the command:
+%
+\begin{verbatim}
+myro --assign <UserName> <Group>
+\end{verbatim}
+%
+To delete a user account you should drop the entire MySQL user
+account. To see the list of users along with their properties issue
+the following SQL statement from a MySQL terminal:
+%
+\begin{verbatim}
+call myro.users();
+\end{verbatim}
+
+%
+\subsubsection{Protect a table}
+To protect a table with \myro issue the command:
+%
+\begin{verbatim}
+myro --protect <DBName> <Table> <View>
+\end{verbatim}
+%
+where the first two arguments are the database which contains the
+table, and the table name to protect. The third argument is the name
+of the view that will be used to access the table. This command will
+add three fields in the table:
+%
+\begin{itemize}
+\item \verb|my_uid|: to store the user ID of record owner;
+\item \verb|my_gid|: to store the group ID to which the record belongs;
+\item \verb|my_perm|: to store the record permissions.
+\end{itemize}
+%
+These fields are all of type \verb|TINYINT UNSIGNED| so each record
+will require 3 more bytes on disk. Actually this field type is fixed,
+thus only 256 users and groups can be defined, but this feature may
+change in future releases. If the table being protected by myro
+already contains records the corresponding \verb|my_uid|,
+\verb|my_gid| and \verb|my_perm| fields will contain NULL values, this
+means that these records will be accessible only from ``super-users''.
+To change the owner of these records open a MySQL terminal as user
+``root'' and issue the following statement:
+%
+\begin{verbatim}
+UPDATE <table> SET my_uid  = myro.uid(), 
+                   my_gid  = myro.defgid(),
+                   my_perm = myro.defperm();
+\end{verbatim}
+%
+where \verb|<table>| is the name of the table being protected. For those
+records that will be inserted after the table has been protected, this
+fields will be automatically populated with the correct values. The
+command \verb|myro --protect| will also create a view with the same
+structure as the underlying table whose purpose is to filter records
+that can be read (etc.) by a user. Users should now use this view to access
+the data instead of the real table.
+
+%
+\subsubsection{Check users' grants}
+\label{sec:myro_Check users' grants}
+All grants relative to the protected table should be removed for any
+users so that the only way to access the data is to use the view
+created by \myro. To check that all user's grants are compatible with
+this requirement you can simply execute the \verb|myro| script without
+any argument, so that if some user can directly access one of the
+protected tables a warning will be given. On the other hand users
+should have grants to access \myro's views. To give users the correct
+grants to access a \myro view issue the command:
+%
+\begin{verbatim}
+myro --grant <UserName> <Host> <DBName> <View>
+\end{verbatim}
+%
+
+\subsection{Extended views}
+The view created by \myro has the same structure as the underlying
+table without the \verb|my_uid|, \verb|my_gid| and \verb|my_perm|
+fields, thus it is impossible to read the information stored in these
+fields. Typically these information are not needed by the users, however
+there may be some cases in which it is necessary to show these
+information. For this purpose \myro can create three additional views
+which shows these information in various formats. To create this
+views issue the command:
+%
+\begin{verbatim}
+myro --extended <DBName> <Table>
+\end{verbatim}
+
+
+%---------------------------------------------------------------------
+\newpage
+\section{Reference for functions and procedures}
+Below there is a list of all functions and procedure created with
+\myro, with their usage and parameters. Here we'll use some common
+abbreviations which resemble the ones used in Unix filesystems:
+
+\begin{itemize}
+\item \verb|uid|: an integer which represent the user ID;
+\item \verb|gid|: an integer which represent the group ID;
+\item \verb|defgid|: an integer which represent the default group ID
+  of any newly inserted record for a given user;
+\item \verb|defperm|: an integer which represent the default
+  permission specification of any newly inserted record for a given
+  user.
+\end{itemize}
+
+
+
+\subsection{myro.chkPerm}
+Check if a user can access a record for a read or write operation. The
+first parameter is the ID of the user who wants to access the
+record, the next three parameters are the value of the \verb|my_uid|,
+\verb|my_gid| and \verb|my_perm| fields read from the record and the
+final parameter specifies which kind of access the user wants to
+perform.
+
+\syntax{myro.chkPerm(uid TINYINT UNSIGNED, my\_uid TINYINT UNSIGNED,
+  my\_gid TINYINT UNSIGNED, my\_perm TINYINT UNSIGNED, what CHAR(1))}
+
+\begin{parameters}
+\param{uid}{TINYINT UNSIGNED}: user ID;
+\param{my\_uid}{TINYINT UNSIGNED}: user ID of owner of the record;
+\param{my\_gid}{TINYINT UNSIGNED}: group ID of the group to which the
+record belongs to;
+\param{my\_perm}{TINYINT UNSIGNED}: permission specification;
+\param{what}{CHAR(1)}: ``r'' for read access, ``w'' for write access.
+\end{parameters}
+
+\return{BOOL}: 1 if the user can access the record, 0 otherwise.
+
+%
+\subsection{myro.defgid}
+Return the default group ID for the current user.
+
+\syntax{myro.defgid()}
+
+\return{TINYINT UNSIGNED}: default group ID.
+
+%
+\subsection{myro.defgrp}
+Return the default group name for the current user.
+
+\syntax{myro.defgrp()}
+
+\return{CHAR(50)}: default group name.
+
+%
+\subsection{myro.defperm}
+Return the default permission specification for the current user.
+
+\syntax{myro.defperm()}
+
+\return{TINYINT UNSIGNED}: default permission specification.
+
+
+
+\subsection{myro.fmtPerm}
+Return a string representation of a permission specification. A read
+permission is identified by character ``r'', a write permission by
+character ``w''. The string is made up of 6 characters, the first two
+refer to access for the owner of the record, the third and
+fourth to access for users belonging to the group, the last two
+characters for all other users.
+ 
+\syntax{myro.fmtPerm(perm TINYINT UNSIGNED)}
+
+\begin{parameters}
+\param{perm}{TINYINT UNSIGNED}: permission specification.
+\end{parameters}
+
+\return{CHAR(6)}: string representation of permission.
+
+%
+\subsection{myro.gid2grp}
+Return the group name for a given group ID.
+
+\syntax{myro.gid2grp(gid TINYINT UNSIGNED)}
+
+\begin{parameters}
+\param{gid}{TINYINT UNSIGNED}
+\end{parameters}
+
+\return{CHAR(50)}: group name, or NULL if the \verb|gid| does not exist.
+
+
+
+
+\subsection{myro.grp2gid}
+Return the group id for a given group name.
+
+\syntax{myro.grp2gid(grp CHAR(50))}
+
+\begin{parameters}
+\param{grp}{CHAR(50)}: group name.
+\end{parameters}
+
+\return{TINYINT UNSIGNED}: group ID, or NULL if the group does not
+exist.
+
+
+\subsection{myro.is\_root}
+Return a flag telling if current user is ``root''.
+
+\syntax{myro.is\_root()}
+
+\return{BOOL}: 1 if the current user is ``root'', 0 otherwise.
+
+%
+\subsection{myro.is\_su}
+Returns the ``super user'' flag of a given user ID.
+
+\syntax{myro.is\_su(uid TINYINT UNSIGNED)}
+
+\begin{parameters}
+\param{uid}{TINYINT UNSIGNED}: user ID;
+\end{parameters}
+
+\return{BOOL}: ``super user'' flag.
+
+%
+\subsection{myro.listGroups}
+Return a list of groups to which a user belongs to, given its user ID.
+
+\syntax{myro.listGroups(uid TINYINT UNSIGNED)}
+
+\begin{parameters}
+\param{uid}{TINYINT UNSIGNED}: user ID.
+\end{parameters}
+
+\return{VARCHAR(200)}: a string with a list of group names.
+
+%
+\subsection{myro.myuser}
+Return the user name of the user who is calling the function.
+
+\syntax{myro.myuser()}
+
+\return{CHAR(50)}: user name of the current user.
+
+
+
+\subsection{myro.perm}
+Return a permission specification given its string representation.
+This function performis the inverse codification of the
+\verb|myro.fmtPerm| function.
+
+\syntax{myro.perm(perm CHAR(6))}
+
+\begin{parameters}
+\param{perm}{CHAR(6)}: string representation of permission.
+\end{parameters}
+
+\return{TINYINT UNSIGNED}: permission specification.
+
+%
+\subsection{myro.print\_priv}
+Show the list of MySQL grants for a user.
+
+\syntax{CALL myro.print\_priv(usr CHAR(50));}
+
+\begin{parameters}
+\param{usr}{CHAR(50)}: user name.
+\end{parameters}
+
+%
+\subsection{myro.su}
+Return the ``super user'' flag for the current user.
+
+\syntax{myro.su()}
+
+\return{BOOL}:``super user'' flag.
+
+%
+\subsection{myro.uid}
+Return the uid of the user who is calling the function.
+
+\syntax{myro.uid()}
+
+\return{TINYINT UNSIGNED}: user ID of the current user.
+
+%
+\subsection{myro.uid2defgid}
+Return the default group ID of a given user ID.
+
+\syntax{myro.uid2defgid(uid TINYINT UNSIGNED)}
+
+\begin{parameters}
+\param{uid}{TINYINT UNSIGNED}: user ID.
+\end{parameters}
+
+\return{TINYINT UNSIGNED}: default group ID.
+
+%
+\subsection{myro.uid2defperm}
+Return default permission specification of a given user ID.
+
+\syntax{myro.uid2defperm(uid TINYINT UNSIGNED)}
+
+\begin{parameters}
+\param{uid}{TINYINT UNSIGNED}: user ID.
+\end{parameters}
+
+\return{TINYINT UNSIGNED}: default permission specification.
+
+%
+\subsection{myro.uid2usr}
+Return the user name of a given user ID.
+
+\syntax{myro.uid2usr(uid TINYINT UNSIGNED)}
+
+\begin{parameters}
+\param{uid}{TINYINT UNSIGNED}: user ID.
+\end{parameters}
+
+\return{CHAR(50)}: user name, or NULL if the \verb|uid| doesn't exist.
+
+%
+\subsection{myro.uid\_member\_of\_anygroup}
+Check if a user is member of special group ``anygroup''.
+
+\syntax{myro.uid\_member\_of\_anygroup(uid TINYINT UNSIGNED)}
+
+\begin{parameters}
+\param{uid}{TINYINT UNSIGNED}: user ID.
+\end{parameters}
+
+\return{BOOL}: 1 if the user is member of ``anygroup'', 0 otherwise.
+
+%
+\subsection{myro.uid\_member\_of\_gid}
+Check if a user is member of the group identified by \verb|gid|.
+
+\syntax{myro.uid\_member\_of\_gid(uid TINYINT UNSIGNED, gid TINYINT UNSIGNED)}
+
+\begin{parameters}
+\param{uid}{TINYINT UNSIGNED}: user ID;
+\param{gid}{TINYINT UNSIGNED}: group ID.
+\end{parameters}
+
+\return{BOOL}: 1 if the user is member of the group identified by \verb|gid|,
+0 otherwise.
+
+
+
+\subsection{myro.uid\_member\_of\_grp}
+Check if a user is member of a group.
+
+\syntax{myro.uid\_member\_of\_grp(uid TINYINT UNSIGNED, grp CHAR(50))}
+
+\begin{parameters}
+\param{uid}{TINYINT UNSIGNED}: user ID.
+\param{grp}{CHAR(50)}: group name.
+\end{parameters}
+
+\return{BOOL}: 1 if the user is member of the group, 0 otherwise.
+
+%
+\subsection{myro.users}
+Show a list of all user accounts along with their properties and the
+groups they belong to.
+
+\syntax{CALL myro.users();}
+
+
+
+\subsection{myro.groups}
+Shows a list of all defined groups with their descriptions.
+
+\syntax{CALL myro.groups();}
+
+
+
+
+
+
+\subsection{myro.usr2defgid}
+Returns the user name of a given user name.
+
+\syntax{myro.usr2defgid(usr CHAR(50))}
+
+\begin{parameters}
+\param{usr}{CHAR(50)}: user name.
+\end{parameters}
+
+\return{TINYINT UNSIGNED}: default group ID.
+
+%
+\subsection{myro.usr2uid}
+Return the user ID of a given user name.
+
+\syntax{myro.usr2uid(usr CHAR(50))}
+
+\begin{parameters}
+\param{usr}{CHAR(50)}: user name.
+\end{parameters}
+
+\return{TINYINT UNSIGNED}: user ID, or NULL if the user doesn't
+exist.
+
+
+
+\subsection{myro.usr\_descr}
+Return the description of a given user name.
+
+\syntax{myro.usr\_descr(usr CHAR(50))}
+
+\begin{parameters}
+\param{usr}{CHAR(50)}: user name.
+\end{parameters}
+
+\return{CHAR(50)}: description if any has been given, NULL otherwise.
+
+%
+\subsection{myro.usr\_email}
+Return the e-mail address of a given user name.
+
+\syntax{myro.usr\_email(usr CHAR(50))}
+
+\begin{parameters}
+\param{usr}{CHAR(50)}: user name.
+\end{parameters}
+
+\return{CHAR(50)}: e-mail address if any has been given, NULL
+otherwise.
+
+\end{document}
+

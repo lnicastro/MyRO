@@ -55,7 +55,7 @@ myro --install
 ```
 
 You'll be asked the MySQL root password to complete this task.
-See the manual for a full description or run:
+See the [documentation](doc/myro.pdf) for a full description or run:
 ```
 myro --help
 ```
