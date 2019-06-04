@@ -1,0 +1,31 @@
+# Dependencies
+src/.deps
+src/.libs
+src/*.dSYM
+
+# Compiled Object files
+*.lo
+*.o
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# More stuff
+./Makefile
+contrib/Makefile
+doc/Makefile
+scripts/Makefile
+sql/Makefile
+src/Makefile
+src/stamp-*
+aclocal.m4
+config.log
+config.status
+libtool
