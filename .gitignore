@@ -18,6 +18,7 @@ src/*.dSYM
 *.lib
 
 # More stuff
+autom4te.cache
 ./Makefile
 contrib/Makefile
 doc/Makefile
