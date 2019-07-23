@@ -347,7 +347,7 @@ CREATE FUNCTION myro.setIdentity(c INT)
 
 DROP FUNCTION  IF EXISTS myro.assign_usr_to_grp//
 #@ONERR_DIE|Cannot create function|
-CREATE FUNCTION myro.assign_usr_to_grp(p_usr CHAR(50), p_grp CHAR(50), member BOOLEAN) 
+CREATE FUNCTION myro.assign_usr_to_grp(p_usr CHAR(50), p_grp CHAR(50), is_member BOOLEAN) 
     RETURNS INTEGER
     NOT DETERMINISTIC SQL SECURITY INVOKER
     BEGIN

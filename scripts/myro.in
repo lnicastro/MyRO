@@ -828,10 +828,11 @@ sub myro_check_grants {
     my $t;
     my @rec;
 
-    exec_sql(qq{
-	\#\@ONERR_DIE|Cannot assign SELECT, EXECUTE grants to DB myro|
-	GRANT SELECT, EXECUTE ON myro.* TO ''\@'%';
-        });
+# ---- 2019/07/23 commented because of failure if the anonymous user does not exist
+    #exec_sql(qq{
+#	\#\@ONERR_DIE|Cannot assign SELECT, EXECUTE grants to DB myro|
+#	GRANT SELECT, EXECUTE ON myro.* TO ''\@'%';
+#       });
 
     foreach $t (@v) {
 	@rec = split(/\t/, $t);
