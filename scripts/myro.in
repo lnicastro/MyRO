@@ -303,7 +303,7 @@ sub connectToDB {
       $p = askPassword($u);
     }
 
-    my $pass = askPassword($u);
+    $p = askPassword($u);
 
     my $dbna;
     if ($#_ >= 0) {
