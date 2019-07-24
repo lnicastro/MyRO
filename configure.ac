@@ -19,7 +19,7 @@
 # 
 # ----------------------------------------------------------------------$
 AC_INIT([myro],
-        [0.3.2-alpha4],
+        [0.3.2-alpha5],
         [Giorgio Calderone <giorgio.calderone@inaf.it>, Luciano Nicastro <luciano.nicastro@inaf.it>],
         [myro])
 
