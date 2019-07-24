@@ -1,4 +1,4 @@
-#!@PERL@ -Wall
+#!/opt/local/bin/perl -Wall
 
 # ----------------------------------------------------------------------^
 # Copyright (C) 2004, 2005, 2006, 2007 Giorgio Calderone <gcalderone@ifc.inaf.it>
@@ -57,11 +57,11 @@ my $dbh = 0;
 
 my $read_cnf = 0;  #Read root password from ~/.my.cnf (section with user=root)
 
-my $myrover = '@VERSION@';
+my $myrover = '0.3.2-alpha5';
 my $MYROhead = "\nMYRO - Record Oriented privilege system (MySQL), ver. $myrover" .
             "\nGiorgio Calderone - giorgio.calderone\@inaf.it and Luciano Nicastro - luciano.nicastro\@inaf.it\n";
 
-my $pre = '@prefix@/share/myro/sql';
+my $pre = '/usr/local/share/myro/sql';
 my $logfileName = "myro.log";
 my $logfd;
 
