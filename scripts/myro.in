@@ -1,4 +1,4 @@
-#!@PERL@ -Wall
+#!@PERL@ -W -l
 
 # ----------------------------------------------------------------------^
 # Copyright (C) 2004, 2005, 2006, 2007 Giorgio Calderone <gcalderone@ifc.inaf.it>
