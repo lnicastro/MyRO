@@ -29,6 +29,11 @@
 
 \usepackage{a4wide}
 \usepackage{fancyhdr}
+
+\usepackage[usenames,dvipsnames]{xcolor} % for hyperref
+\usepackage{hyperref}
+\hypersetup{colorlinks,urlcolor=MidnightBlue,linkcolor=Brown}
+
 \pagestyle{fancy}
 \renewcommand{\footrulewidth}{0.4pt}
 
@@ -47,9 +52,10 @@
 %\sloppy
 
 \newcommand{\myro}{\textbf{MyRO} }
+\newcommand{\myrO}{\textbf{MyRO}}
 
 \def\ver{Ver. \input{../version}}
-\def\url{http://ross.iasfbo.inaf.it/myro}
+\def\git{ \url{https://github.com/lnicastro/MyRO} }
 
 \newcommand{\syntax}[1]
 {
@@ -171,29 +177,21 @@
 %
 \textbf{MYRO \\ My Record Oriented \\ privilege system}
 %
-%\thanks{\url}
-%
-%\begin{center}
-%\vspace{0.8cm}
-%\includegraphics[width=5cm,keepaspectratio]{mcslogo} \\
-%\vspace{0.8cm}
-%\end{center}
-%
 \centerline{\rule{\textwidth}{0.4pt}}
 %
 }
 \bigskip
 \author{
   \sc{Giorgio Calderone} \\
-  %\footnote{Giorgio Calderone $<$gcalderone@ifc.inaf.it$>$}  \\
-  \sc{IFC - INAF Palermo, Italy} \\ \\
+  %\footnote{Giorgio Calderone $<$giorgio.calderone@inaf.it$>$}  \\
+  \sc{INAF - OA Trieste, Italy} \\ \\
   \sc{Luciano Nicastro} \\
-  %\footnote{Luciano Nicastro $<$nicastro@iasfbo.inaf.it$>$} \\
-  \sc{IASF - INAF Bologna, Italy} \\
+  %\footnote{Luciano Nicastro $<$luciano.nicastro@inaf.it$>$} \\
+  \sc{INAF - OAS Bologna, Italy} \\
  }
 \date{\today \\
       \ver \\
-      \url \\
+      \git \\
       \centerline{\rule{\textwidth}{0.4pt}}
      }
 \maketitle
@@ -215,7 +213,7 @@
 
 \section{Introduction}
 
-\section{\myro: My Record Oriented privilege system}
+\section{\myrO: My Record Oriented privilege system}
 \myro is the name we use to refer to a technique used to implement a
 database privilege system on a per-record basis on the MySQL database.
 Actually all database servers implement a privilege system based on
@@ -269,8 +267,9 @@ know that \myro is working.
 \newpage
 \section{\myro installation}
 
-The \myro software library is distributed in a \verb|tar.gz| package.
-You can find the latest version at \url. To unpack the package simply
+The \myro software library is distributed in a \verb|tar.gz| package
+and via GitHub.
+You can find the latest version at \git. To unpack the package simply
 issue the command:
 %
 \begin{verbatim}
@@ -281,7 +280,7 @@ where \verb|x|, \verb|y|, \verb|z| are the version number (namely the
 first number is the major revision, the second number is the version,
 and third number is the subversion). A directory named
 \verb|myro-x.y.z| will be created containing all sources code as well
-as the documentation and the scripts needed to install \myro. Before
+as the documentation and the scripts needed to install \myrO. Before
 installing \myro you should check that all mandatory dependencies are
 satisfied (see Sect. \ref{sec:Dependencies}), then you must follow a
 three step procedure: Configure, Compile and Installing \myro.
@@ -291,7 +290,7 @@ three step procedure: Configure, Compile and Installing \myro.
 The only mandatory packages required by \myro are:
 
 \begin{itemize}
-\item MySQL sources (\verb|http://www.mysql.org|, version 5.1.20 later);
+\item MySQL sources (\verb|http://www.mysql.org|, version 5.1.20 or later);
 \item Perl (\verb|http://www.perl.com/|);
 \item The \verb|DBD::mysql| perl module;
 \end{itemize}
@@ -316,7 +315,7 @@ them before continuing.
 \label{sec:configuremyro}
 Configuring \myro means checking your system for compatibilities,
 search for include files and libraries, and finally produce all
-necessary \textsf{Makefile}s needed to compile \myro. This is done
+necessary \textsf{Makefile}s needed to compile \myrO. This is done
 automatically by the distributed \verb|configure| script. Typically
 you can use this script without any option, as follows:
 
@@ -332,7 +331,7 @@ For further documentation see the \verb|INSTALL| file.
 %
 \subsubsection{Compile}
 \label{sec:compilemyro}
-To compile \myro, once the \verb|configure| script has been correctly
+To compile \myrO, once the \verb|configure| script has been correctly
 executed, simply issue the command:
 %
 \begin{verbatim}
@@ -431,7 +430,7 @@ been assigned to \verb|anygroup|.
 %---------------------------------------------------------------------
 \newpage
 \section{\myro usage}
-All administrative tasks related to \myro, like protecting tables or
+All administrative tasks related to \myrO, like protecting tables or
 manipulating groups, can be performed using the the \verb|myro|
 script. All available options can be displayed using the command:
 %
@@ -560,11 +559,11 @@ the data instead of the real table.
 \label{sec:myro_Check users' grants}
 All grants relative to the protected table should be removed for any
 users so that the only way to access the data is to use the view
-created by \myro. To check that all user's grants are compatible with
+created by \myrO. To check that all user's grants are compatible with
 this requirement you can simply execute the \verb|myro| script without
 any argument, so that if some user can directly access one of the
 protected tables a warning will be given. On the other hand users
-should have grants to access \myro's views. To give users the correct
+should have grants to access \myrO's views. To give users the correct
 grants to access a \myro view issue the command:
 %
 \begin{verbatim}
@@ -591,7 +590,7 @@ myro --extended <DBName> <Table>
 \newpage
 \section{Reference for functions and procedures}
 Below there is a list of all functions and procedure created with
-\myro, with their usage and parameters. Here we'll use some common
+\myrO, with their usage and parameters. Here we'll use some common
 abbreviations which resemble the ones used in Unix filesystems:
 
 \begin{itemize}

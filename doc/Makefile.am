@@ -19,7 +19,7 @@
 # 
 # ----------------------------------------------------------------------$
 
-EXTRA_DIST = myro.tex html
+EXTRA_DIST = myro.tex
 
 myro.pdf: myro.tex
 	pdflatex myro.tex
