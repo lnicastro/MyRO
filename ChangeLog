@@ -1,3 +1,6 @@
+2019-09-04 Luciano Nicastro <luciano.nicastro@inaf.it>, ver. 0.3.3
+	- Updated documentation and cleaning.
+
 2019-05-31 Luciano Nicastro <luciano.nicastro@inaf.it>, ver. 0.3.2-alpha4
 	- Update libmyro.cc to manage MySQL versions > 5.1.
 	- Porting to GitHub.
