@@ -45,7 +45,7 @@ CREATE FUNCTION myro.uid2usr(p_uid TINYINT UNSIGNED) RETURNS CHAR(50)
 
 DROP FUNCTION  IF EXISTS myro.usr_email//
 #@ONERR_DIE|Cannot create function|
-CREATE FUNCTION myro.usr_email(p_usr CHAR(50)) RETURNS CHAR(50)
+CREATE FUNCTION myro.usr_email(p_usr CHAR(200)) RETURNS CHAR(200)
   NOT DETERMINISTIC
   BEGIN
     RETURN (SELECT email FROM myro.usr WHERE usr=p_usr);

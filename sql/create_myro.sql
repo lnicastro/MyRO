@@ -32,7 +32,7 @@ CREATE TABLE usr(uid      TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
                  defgid   TINYINT UNSIGNED NOT NULL DEFAULT 1,
                  defperm  TINYINT UNSIGNED NOT NULL DEFAULT 11,
                  descr    VARCHAR(200),
-                 email    VARCHAR(50),
+                 email    VARCHAR(200),
                  flag     BOOL NOT NULL DEFAULT 1,
                  PRIMARY KEY(uid),
                  UNIQUE KEY(usr))//

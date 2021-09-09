@@ -1,3 +1,7 @@
+2021-09-09 Luciano Nicastro <luciano.nicastro@inaf.it>, ver. 0.3.3
+	- email field increased from 50 to 200 chars to allow for multiple
+	comma separated addresses. affected files: create_myro.sql and udf.sql
+
 2019-09-04 Luciano Nicastro <luciano.nicastro@inaf.it>, ver. 0.3.3
 	- Updated documentation and cleaning.
 
