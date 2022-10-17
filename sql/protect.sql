@@ -3,8 +3,8 @@ USE @DB@//
 
 #@ONERR_WARN|Cannot alter table @TABLE@|
 ALTER TABLE @DB@.@TABLE@
-  ADD COLUMN my_uid   TINYINT UNSIGNED,
-  ADD COLUMN my_gid   TINYINT UNSIGNED,
+  ADD COLUMN my_uid   SMALLINT UNSIGNED,
+  ADD COLUMN my_gid   SMALLINT UNSIGNED,
   ADD COLUMN my_perm  TINYINT UNSIGNED//
 
 #Adding index to this table give a problem:

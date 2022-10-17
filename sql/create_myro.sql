@@ -26,10 +26,10 @@ CREATE TABLE tbl(db CHAR(50),
 DROP TABLE IF EXISTS usr//
 
 #@ONERR_DIE|Cannot create table usr|
-CREATE TABLE usr(uid      TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE usr(uid      SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
                  usr      CHAR(50) NOT NULL,
                  su       BOOL NOT NULL DEFAULT 0,
-                 defgid   TINYINT UNSIGNED NOT NULL DEFAULT 1,
+                 defgid   SMALLINT UNSIGNED NOT NULL DEFAULT 1,
                  defperm  TINYINT UNSIGNED NOT NULL DEFAULT 11,
                  descr    VARCHAR(200),
                  email    VARCHAR(200),
@@ -41,7 +41,7 @@ CREATE TABLE usr(uid      TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
 DROP TABLE IF EXISTS grp//
 
 #@ONERR_DIE|Cannot create table grp|
-CREATE TABLE grp(gid    TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE grp(gid    SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
                  grp    CHAR(50) NOT NULL,
                  descr  VARCHAR(200),
                  PRIMARY KEY(gid),
@@ -54,13 +54,13 @@ INSERT INTO grp(grp, descr) VALUES('anygroup', 'Each user belonging to this grou
 DROP TABLE IF EXISTS usrgrp//
 
 #@ONERR_DIE|Cannot create table usrgrp|
-CREATE TABLE usrgrp(uid  TINYINT UNSIGNED NOT NULL,
-                    gid  TINYINT UNSIGNED NOT NULL,
+CREATE TABLE usrgrp(uid  SMALLINT UNSIGNED NOT NULL,
+                    gid  SMALLINT UNSIGNED NOT NULL,
                     UNIQUE KEY(uid, gid),
                     INDEX(gid))//
 
 
-CREATE TABLE mcsgrant(uid      TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE mcsgrant(uid      SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
                       appname  CHAR(30) NOT NULL,
                       cmd      CHAR(30) NOT NULL,
                       perm     TINYINT UNSIGNED NOT NULL DEFAULT 1,

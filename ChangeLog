@@ -1,3 +1,8 @@
+2022-10-17 Luciano Nicastro <luciano.nicastro@inaf.it>, ver. 0.3.3
+	- Changed TINYINT UNSIGNED fields to SMALLINT UNSIGNED in all the tables,
+	functions and procedures for user and group IDs.
+	Affected scripts (in sql/): create_myro.sql protect.sql udf.sql
+
 2021-09-09 Luciano Nicastro <luciano.nicastro@inaf.it>, ver. 0.3.3
 	- email field increased from 50 to 200 chars to allow for multiple
 	comma separated addresses. affected files: create_myro.sql and udf.sql

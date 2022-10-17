@@ -5,7 +5,7 @@ USE myro//
 
 DROP FUNCTION  IF EXISTS myro.grp2gid//
 #@ONERR_DIE|Cannot create function|
-CREATE FUNCTION myro.grp2gid(p_grp CHAR(50)) RETURNS TINYINT UNSIGNED
+CREATE FUNCTION myro.grp2gid(p_grp CHAR(50)) RETURNS SMALLINT UNSIGNED
   NOT DETERMINISTIC
   BEGIN
     RETURN (SELECT gid FROM myro.grp WHERE grp=p_grp);
@@ -15,7 +15,7 @@ CREATE FUNCTION myro.grp2gid(p_grp CHAR(50)) RETURNS TINYINT UNSIGNED
 
 DROP FUNCTION  IF EXISTS myro.gid2grp//
 #@ONERR_DIE|Cannot create function|
-CREATE FUNCTION myro.gid2grp(p_gid TINYINT UNSIGNED) RETURNS CHAR(50)
+CREATE FUNCTION myro.gid2grp(p_gid SMALLINT UNSIGNED) RETURNS CHAR(50)
   NOT DETERMINISTIC
   BEGIN
 	RETURN (SELECT grp FROM myro.grp WHERE gid=p_gid);
@@ -25,7 +25,7 @@ CREATE FUNCTION myro.gid2grp(p_gid TINYINT UNSIGNED) RETURNS CHAR(50)
 
 DROP FUNCTION  IF EXISTS myro.usr2uid//
 #@ONERR_DIE|Cannot create function|
-CREATE FUNCTION myro.usr2uid(p_usr CHAR(50)) RETURNS TINYINT UNSIGNED
+CREATE FUNCTION myro.usr2uid(p_usr CHAR(50)) RETURNS SMALLINT UNSIGNED
   NOT DETERMINISTIC
   BEGIN
     RETURN (SELECT uid FROM myro.usr WHERE usr=p_usr);
@@ -35,7 +35,7 @@ CREATE FUNCTION myro.usr2uid(p_usr CHAR(50)) RETURNS TINYINT UNSIGNED
 
 DROP FUNCTION  IF EXISTS myro.uid2usr//
 #@ONERR_DIE|Cannot create function|
-CREATE FUNCTION myro.uid2usr(p_uid TINYINT UNSIGNED) RETURNS CHAR(50)
+CREATE FUNCTION myro.uid2usr(p_uid SMALLINT UNSIGNED) RETURNS CHAR(50)
   NOT DETERMINISTIC
   BEGIN
 	RETURN (SELECT usr FROM myro.usr WHERE uid=p_uid);
@@ -88,7 +88,7 @@ CREATE FUNCTION myro.is_root() RETURNS BOOL
 
 DROP FUNCTION  IF EXISTS myro.uid//
 #@ONERR_DIE|Cannot create function|
-CREATE FUNCTION myro.uid() RETURNS TINYINT UNSIGNED
+CREATE FUNCTION myro.uid() RETURNS SMALLINT UNSIGNED
     NOT DETERMINISTIC
     BEGIN
        SET @count = @count + 1;
@@ -99,14 +99,14 @@ CREATE FUNCTION myro.uid() RETURNS TINYINT UNSIGNED
 
 DROP FUNCTION  IF EXISTS myro.uid2defgid//
 #@ONERR_DIE|Cannot create function|
-CREATE FUNCTION myro.uid2defgid(p_uid TINYINT UNSIGNED) RETURNS TINYINT UNSIGNED
+CREATE FUNCTION myro.uid2defgid(p_uid SMALLINT UNSIGNED) RETURNS SMALLINT UNSIGNED
     NOT DETERMINISTIC
     RETURN (SELECT defgid FROM myro.usr WHERE uid=p_uid)//
 
 
 DROP FUNCTION  IF EXISTS myro.usr2defgid//
 #@ONERR_DIE|Cannot create function|
-CREATE FUNCTION myro.usr2defgid(p_usr CHAR(50)) RETURNS TINYINT UNSIGNED
+CREATE FUNCTION myro.usr2defgid(p_usr CHAR(50)) RETURNS SMALLINT UNSIGNED
     NOT DETERMINISTIC
     RETURN (SELECT myro.uid2defgid(myro.usr2uid(p_usr)))//
 
@@ -114,7 +114,7 @@ CREATE FUNCTION myro.usr2defgid(p_usr CHAR(50)) RETURNS TINYINT UNSIGNED
 
 DROP FUNCTION  IF EXISTS myro.defgid//
 #@ONERR_DIE|Cannot create function|
-CREATE FUNCTION myro.defgid() RETURNS TINYINT UNSIGNED
+CREATE FUNCTION myro.defgid() RETURNS SMALLINT UNSIGNED
     NOT DETERMINISTIC
     RETURN myro.uid2defgid(myro.uid())//
 
@@ -130,7 +130,7 @@ CREATE FUNCTION myro.defgrp() RETURNS CHAR(50)
 
 DROP FUNCTION  IF EXISTS myro.uid2defperm//
 #@ONERR_DIE|Cannot create function|
-CREATE FUNCTION myro.uid2defperm(p_uid TINYINT UNSIGNED) RETURNS TINYINT UNSIGNED
+CREATE FUNCTION myro.uid2defperm(p_uid SMALLINT UNSIGNED) RETURNS TINYINT UNSIGNED
     NOT DETERMINISTIC
     RETURN (SELECT defperm FROM myro.usr WHERE uid=p_uid)//
 
@@ -146,7 +146,7 @@ CREATE FUNCTION myro.defperm() RETURNS TINYINT UNSIGNED
 
 DROP FUNCTION  IF EXISTS myro.is_su//
 #@ONERR_DIE|Cannot create function|
-CREATE FUNCTION myro.is_su(p_uid TINYINT UNSIGNED) RETURNS BOOL
+CREATE FUNCTION myro.is_su(p_uid SMALLINT UNSIGNED) RETURNS BOOL
     NOT DETERMINISTIC
     BEGIN
       DECLARE b BOOL;
@@ -175,7 +175,7 @@ CREATE FUNCTION myro.su() RETURNS BOOL
 
 DROP FUNCTION  IF EXISTS myro.listGroups//
 #@ONERR_DIE|Cannot create function|
-CREATE FUNCTION myro.listGroups(p_uid TINYINT UNSIGNED) RETURNS VARCHAR(200)
+CREATE FUNCTION myro.listGroups(p_uid SMALLINT UNSIGNED) RETURNS VARCHAR(200)
    NOT DETERMINISTIC
    BEGIN
      DECLARE a CHAR(50);
@@ -226,7 +226,7 @@ CREATE PROCEDURE myro.groups()
 
 DROP FUNCTION  IF EXISTS myro.uid_member_of_anygroup//
 #@ONERR_DIE|Cannot create function|
-CREATE FUNCTION myro.uid_member_of_anygroup(p_uid TINYINT UNSIGNED)
+CREATE FUNCTION myro.uid_member_of_anygroup(p_uid SMALLINT UNSIGNED)
   RETURNS BOOLEAN
    NOT DETERMINISTIC
    BEGIN
@@ -237,7 +237,7 @@ CREATE FUNCTION myro.uid_member_of_anygroup(p_uid TINYINT UNSIGNED)
 
 DROP FUNCTION  IF EXISTS myro.uid_member_of_gid//
 #@ONERR_DIE|Cannot create function|
-CREATE FUNCTION myro.uid_member_of_gid(p_uid TINYINT UNSIGNED, p_gid TINYINT UNSIGNED)
+CREATE FUNCTION myro.uid_member_of_gid(p_uid SMALLINT UNSIGNED, p_gid SMALLINT UNSIGNED)
    RETURNS BOOLEAN
    NOT DETERMINISTIC
    BEGIN
@@ -253,7 +253,7 @@ CREATE FUNCTION myro.uid_member_of_gid(p_uid TINYINT UNSIGNED, p_gid TINYINT UNS
 
 DROP FUNCTION  IF EXISTS myro.uid_member_of_grp//
 #@ONERR_DIE|Cannot create function|
-CREATE FUNCTION myro.uid_member_of_grp(p_uid TINYINT UNSIGNED, p_grp CHAR(50))
+CREATE FUNCTION myro.uid_member_of_grp(p_uid SMALLINT UNSIGNED, p_grp CHAR(50))
     RETURNS BOOLEAN
     NOT DETERMINISTIC
     RETURN myro.uid_member_of_gid(p_uid, myro.grp2gid(p_grp))//
@@ -262,7 +262,7 @@ CREATE FUNCTION myro.uid_member_of_grp(p_uid TINYINT UNSIGNED, p_grp CHAR(50))
 
 DROP FUNCTION  IF EXISTS myro.usr_member_of_gid//
 #@ONERR_DIE|Cannot create function|
-CREATE FUNCTION myro.usr_member_of_gid(p_usr CHAR(50), p_gid TINYINT UNSIGNED) 
+CREATE FUNCTION myro.usr_member_of_gid(p_usr CHAR(50), p_gid SMALLINT UNSIGNED) 
     RETURNS BOOLEAN
     NOT DETERMINISTIC
     RETURN myro.uid_member_of_gid(myro.usr2uid(p_usr), p_gid)//
@@ -376,22 +376,22 @@ CREATE FUNCTION myro.assign_usr_to_grp(p_usr CHAR(50), p_grp CHAR(50), is_member
 
     
 
-##DROP PROCEDURE IF EXISTS myro.userdel//
-###@ONERR_DIE|Cannot create procedure|
-##CREATE PROCEDURE myro.userdel(IN p_usr CHAR(50))
-##    NOT DETERMINISTIC SQL SECURITY INVOKER
-##    BEGIN
-##      DECLARE id TINYINT UNSIGNED;
-##      IF myro.su() THEN 
-##        SET id = myro.usr2uid(p_usr);
-##
-##        DELETE FROM myro.usr WHERE uid=id;
-##        DELETE FROM myro.usrgrp WHERE uid=id;      
-##        SELECT myro.loadpriv();
-##      ELSE
-##        SELECT myro_error('Only Super-Users can call myro.userdel');
-##      END IF;
-##    END//
+-- DROP PROCEDURE IF EXISTS myro.userdel//
+-- #@ONERR_DIE|Cannot create procedure|
+-- CREATE PROCEDURE myro.userdel(IN p_usr CHAR(50))
+--    NOT DETERMINISTIC SQL SECURITY INVOKER
+--    BEGIN
+--      DECLARE id SMALLINT UNSIGNED;
+--      IF myro.su() THEN 
+--        SET id = myro.usr2uid(p_usr);
+--
+--        DELETE FROM myro.usr WHERE uid=id;
+--        DELETE FROM myro.usrgrp WHERE uid=id;      
+--        SELECT myro.loadpriv();
+--      ELSE
+--        SELECT myro_error('Only Super-Users can call myro.userdel');
+--      END IF;
+--    END//
 
 
 DROP PROCEDURE IF EXISTS myro.groupdel//
@@ -399,7 +399,7 @@ DROP PROCEDURE IF EXISTS myro.groupdel//
 CREATE PROCEDURE myro.groupdel(IN p_grp CHAR(50))
     NOT DETERMINISTIC SQL SECURITY INVOKER
     BEGIN
-      DECLARE id TINYINT UNSIGNED;
+      DECLARE id SMALLINT UNSIGNED;
       IF myro.su() THEN 
         SET id = myro.grp2gid(p_grp);
  
@@ -416,16 +416,16 @@ CREATE PROCEDURE myro.groupdel(IN p_grp CHAR(50))
 DROP FUNCTION IF EXISTS myro.chkPerm//
 #@ONERR_DIE|Cannot create function|
 CREATE FUNCTION myro.chkPerm(
-       p_uid TINYINT UNSIGNED, 
-       my_uid TINYINT UNSIGNED, my_gid TINYINT UNSIGNED, my_perm TINYINT UNSIGNED,
+       p_uid SMALLINT UNSIGNED, 
+       my_uid SMALLINT UNSIGNED, my_gid SMALLINT UNSIGNED, my_perm TINYINT UNSIGNED,
        p_what CHAR(1)) 
   RETURNS BOOLEAN
   NOT DETERMINISTIC
   BEGIN
     IF (p_what = 'r') THEN
       IF (
-          ((my_perm &  2) != 0    AND    my_uid = p_uid)                          OR
-          ((my_perm &  8) != 0    AND    myro.uid_member_of_gid(p_uid, my_gid))   OR
+          ((my_perm &  2) != 0	AND	my_uid = p_uid)				OR
+          ((my_perm &  8) != 0	AND	myro.uid_member_of_gid(p_uid, my_gid))	OR
           ((my_perm & 32) != 0)
          ) THEN
          RETURN TRUE;
@@ -434,8 +434,8 @@ CREATE FUNCTION myro.chkPerm(
 
     IF (p_what = 'w') THEN
       IF (
-          ((my_perm &  1) != 0    AND    my_uid = p_uid)                          OR
-          ((my_perm &  4) != 0    AND    myro.uid_member_of_gid(p_uid, my_gid))   OR
+          ((my_perm &  1) != 0	AND	my_uid = p_uid)				OR
+          ((my_perm &  4) != 0	AND	myro.uid_member_of_gid(p_uid, my_gid))	OR
           ((my_perm & 16) != 0)
          ) THEN
          RETURN TRUE;
@@ -455,19 +455,19 @@ CREATE FUNCTION myro.fmtPerm(p_perm TINYINT UNSIGNED) RETURNS CHAR(6)
 
     SET ret = '';
 
-    #User
+    -- User
     IF (p_perm & 2)  THEN SET ret = CONCAT(ret, 'r');
     ELSE                  SET ret = CONCAT(ret, '-'); END IF;
     IF (p_perm & 1)  THEN SET ret = CONCAT(ret, 'w');
     ELSE                  SET ret = CONCAT(ret, '-'); END IF;
 
-    #Group
+    -- Group
     IF (p_perm & 8)  THEN SET ret = CONCAT(ret, 'r');
     ELSE                  SET ret = CONCAT(ret, '-'); END IF;
     IF (p_perm & 4)  THEN SET ret = CONCAT(ret, 'w');
     ELSE                  SET ret = CONCAT(ret, '-'); END IF;
 
-    #Others
+    -- Others
     IF (p_perm & 32) THEN SET ret = CONCAT(ret, 'r');
     ELSE                  SET ret = CONCAT(ret, '-'); END IF;
     IF (p_perm & 16) THEN SET ret = CONCAT(ret, 'w');
@@ -485,15 +485,15 @@ CREATE FUNCTION myro.perm(p_perm CHAR(6)) RETURNS TINYINT UNSIGNED
     DECLARE ret TINYINT UNSIGNED;
     SET ret = 0;
 
-    #User
+    -- User
     IF (SUBSTR(p_perm, 1, 1) = 'r') THEN SET ret = ret +  2; END IF;
     IF (SUBSTR(p_perm, 2, 1) = 'w') THEN SET ret = ret +  1; END IF;
 
-    #Group
+    -- Group
     IF (SUBSTR(p_perm, 3, 1) = 'r') THEN SET ret = ret +  8; END IF;
     IF (SUBSTR(p_perm, 4, 1) = 'w') THEN SET ret = ret +  4; END IF;
 
-    #Others
+    -- Others
     IF (SUBSTR(p_perm, 5, 1) = 'r') THEN SET ret = ret + 32; END IF;
     IF (SUBSTR(p_perm, 6, 1) = 'w') THEN SET ret = ret + 16; END IF;
 
@@ -515,18 +515,18 @@ BEGIN
     SELECT 'mysql.user', 'Create_priv'		   , 'e' UNION 
     SELECT 'mysql.user', 'Drop_priv'		   , 'f' UNION 
     SELECT 'mysql.user', 'Reload_priv'		   , 'g' UNION 
-    SELECT 'mysql.user', 'Shutdown_priv' 		   , 'h' UNION 
-    SELECT 'mysql.user', 'Process_priv' 		   , 'i' UNION 
+    SELECT 'mysql.user', 'Shutdown_priv' 	   , 'h' UNION 
+    SELECT 'mysql.user', 'Process_priv' 	   , 'i' UNION 
     SELECT 'mysql.user', 'File_priv' 		   , 'j' UNION 
     SELECT 'mysql.user', 'Grant_priv' 		   , 'k' UNION 
     SELECT 'mysql.user', 'References_priv' 	   , 'l' UNION 
     SELECT 'mysql.user', 'Index_priv' 		   , 'm' UNION 
     SELECT 'mysql.user', 'Alter_priv' 		   , 'n' UNION 
-    SELECT 'mysql.user', 'Show_db_priv' 		   , 'o' UNION 
+    SELECT 'mysql.user', 'Show_db_priv' 	   , 'o' UNION 
     SELECT 'mysql.user', 'Super_priv' 		   , 'p' UNION 
-    SELECT 'mysql.user', 'Create_tmp_table_priv' 	   , 'q' UNION 
+    SELECT 'mysql.user', 'Create_tmp_table_priv'   , 'q' UNION 
     SELECT 'mysql.user', 'Lock_tables_priv' 	   , 'r' UNION 
-    SELECT 'mysql.user', 'Execute_priv' 		   , 's' UNION 
+    SELECT 'mysql.user', 'Execute_priv' 	   , 's' UNION 
     SELECT 'mysql.user', 'Repl_slave_priv' 	   , 't' UNION 
     SELECT 'mysql.user', 'Repl_client_priv' 	   , 'u' UNION 
     SELECT 'mysql.user', 'Create_view_priv' 	   , 'v' UNION 
@@ -535,28 +535,28 @@ BEGIN
     SELECT 'mysql.user', 'Alter_routine_priv' 	   , 'y' UNION 
     SELECT 'mysql.user', 'Create_user_priv' 	   , 'z' UNION 
     SELECT 'mysql.user', 'Event_priv' 		   , 'A' UNION 
-    SELECT 'mysql.user', 'Trigger_priv'              , 'B';
+    SELECT 'mysql.user', 'Trigger_priv'            , 'B';
   
   
     SELECT 'mysql.db' AS Perm_Table, 'Select_priv' AS Perm_Column, 'a' AS Code  UNION
-    SELECT 'mysql.db', 'Insert_priv'           , 'b'  UNION
-    SELECT 'mysql.db', 'Update_priv'           , 'c'  UNION
-    SELECT 'mysql.db', 'Delete_priv'           , 'd'  UNION
-    SELECT 'mysql.db', 'Create_priv'           , 'e'  UNION
-    SELECT 'mysql.db', 'Drop_priv'     	     , 'f'  UNION
-    SELECT 'mysql.db', 'Grant_priv'      	     , 'g'  UNION
-    SELECT 'mysql.db', 'References_priv'       , 'h'  UNION
-    SELECT 'mysql.db', 'Index_priv'      	     , 'i'  UNION
-    SELECT 'mysql.db', 'Alter_priv'      	     , 'j'  UNION
-    SELECT 'mysql.db', 'Create_tmp_table_priv' , 'k'  UNION    
-    SELECT 'mysql.db', 'Lock_tables_priv'      , 'l'  UNION
-    SELECT 'mysql.db', 'Create_view_priv'      , 'm'  UNION
-    SELECT 'mysql.db', 'Show_view_priv'        , 'n'  UNION
-    SELECT 'mysql.db', 'Create_routine_priv'   , 'o'  UNION     
-    SELECT 'mysql.db', 'Alter_routine_priv'    , 'p'  UNION  
-    SELECT 'mysql.db', 'Execute_priv'          , 'q'  UNION
-    SELECT 'mysql.db', 'Event_priv'      	     , 'r'  UNION
-    SELECT 'mysql.db', 'Trigger_priv'          , 's';
+    SELECT 'mysql.db', 'Insert_priv'		, 'b'  UNION
+    SELECT 'mysql.db', 'Update_priv'		, 'c'  UNION
+    SELECT 'mysql.db', 'Delete_priv'		, 'd'  UNION
+    SELECT 'mysql.db', 'Create_priv'		, 'e'  UNION
+    SELECT 'mysql.db', 'Drop_priv'		, 'f'  UNION
+    SELECT 'mysql.db', 'Grant_priv'		, 'g'  UNION
+    SELECT 'mysql.db', 'References_priv'	, 'h'  UNION
+    SELECT 'mysql.db', 'Index_priv'		, 'i'  UNION
+    SELECT 'mysql.db', 'Alter_priv'		, 'j'  UNION
+    SELECT 'mysql.db', 'Create_tmp_table_priv'  , 'k'  UNION    
+    SELECT 'mysql.db', 'Lock_tables_priv'	, 'l'  UNION
+    SELECT 'mysql.db', 'Create_view_priv'	, 'm'  UNION
+    SELECT 'mysql.db', 'Show_view_priv'		, 'n'  UNION
+    SELECT 'mysql.db', 'Create_routine_priv'	, 'o'  UNION     
+    SELECT 'mysql.db', 'Alter_routine_priv'	, 'p'  UNION  
+    SELECT 'mysql.db', 'Execute_priv'		, 'q'  UNION
+    SELECT 'mysql.db', 'Event_priv'		, 'r'  UNION
+    SELECT 'mysql.db', 'Trigger_priv'		, 's';
   
     SELECT 'mysql.tables_priv' AS Perm_Table, 'Table_name' AS Perm_Column, 'a' AS Code  UNION
     SELECT 'mysql.tables_priv', 'Grantor'              , 'b'  UNION
@@ -662,8 +662,8 @@ END//
 
 DROP PROCEDURE myro.trigger_insert//
 #@ONERR_DIE|Cannot create procedure|
-CREATE PROCEDURE myro.trigger_insert(INOUT my_uid TINYINT UNSIGNED, 
-                                     INOUT my_gid TINYINT UNSIGNED, 
+CREATE PROCEDURE myro.trigger_insert(INOUT my_uid SMALLINT UNSIGNED, 
+                                     INOUT my_gid SMALLINT UNSIGNED, 
                                      INOUT my_perm TINYINT UNSIGNED)
   NOT DETERMINISTIC
   BEGIN
@@ -684,8 +684,8 @@ CREATE PROCEDURE myro.trigger_insert(INOUT my_uid TINYINT UNSIGNED,
 
 DROP PROCEDURE myro.trigger_update//
 #@ONERR_DIE|Cannot create procedure|
-CREATE PROCEDURE myro.trigger_update(IN my_uid TINYINT UNSIGNED, 
-                                     IN my_gid TINYINT UNSIGNED, 
+CREATE PROCEDURE myro.trigger_update(IN my_uid SMALLINT UNSIGNED, 
+                                     IN my_gid SMALLINT UNSIGNED, 
                                      IN my_perm TINYINT UNSIGNED)
   NOT DETERMINISTIC
   BEGIN
@@ -698,8 +698,8 @@ CREATE PROCEDURE myro.trigger_update(IN my_uid TINYINT UNSIGNED,
 
 DROP PROCEDURE myro.trigger_delete//
 #@ONERR_DIE|Cannot create procedure|
-CREATE PROCEDURE myro.trigger_delete(IN my_uid TINYINT UNSIGNED, 
-                                     IN my_gid TINYINT UNSIGNED, 
+CREATE PROCEDURE myro.trigger_delete(IN my_uid SMALLINT UNSIGNED, 
+                                     IN my_gid SMALLINT UNSIGNED, 
                                      IN my_perm TINYINT UNSIGNED)
   NOT DETERMINISTIC
   BEGIN
@@ -722,7 +722,7 @@ CREATE PROCEDURE myro.rows_count(IN in_db VARCHAR(50), IN tabview VARCHAR(50), I
   BEGIN
     DECLARE is_su, is_any_gid, in_usr, in_w BOOL DEFAULT false;
     DECLARE id, the_gid, anyg_gid, extra_gid, perm SMALLINT;
-    DECLARE n_gids TINYINT DEFAULT 0;
+    DECLARE n_gids SMALLINT DEFAULT 0;
     DECLARE orig_tab CHAR(50) DEFAULT '';
     DECLARE the_what VARCHAR(200) DEFAULT '*';
     DECLARE the_usr CHAR(50) DEFAULT (SELECT SUBSTRING_INDEX(user(),_utf8'@',1));
