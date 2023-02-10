@@ -1,8 +1,8 @@
 # MyRO
-`My Record Oriented privilege system` is the name we use to refer to a technique used to implement a database privilege system on a per-record basis on the MySQL databases.
+`My Record Oriented privilege system` is a technique we use in MySQL to implement a per-record database tables privilege system.
 All database servers implement privilege system based on tables or columns, that is if a user has grants to access a certain table (or a table's column) he can access all records of that table (or that table's column).
 MyRO lets you specify grants on a record level so a user can access only those records it is allowed to. A consequence of this is that different users reading the same table will see different records.
-The grant mechanism provided by MyRO is similar to that of a unix file system, that is each record belongs to a `owner` and a `group` and has three set of permissions associated (for the owner, the users belonging to the group and all other users) that specify if that record can be read and/or written.
+The grant mechanism provided by MyRO is similar to that of a Unix file system, that is each record belongs to a `owner` and a `group` and has three sets of permissions associated (for the owner, the users belonging to the group and all other users) that specify whether that record can be read and/or written.
 
 See the [documentation](doc/myro.pdf).
 
