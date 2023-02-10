@@ -4,6 +4,10 @@ All database servers implement a privilege system based on tables or columns, th
 MyRO lets you specify grants on a record level so a user can access only those records it is allowed to. A consequence of this is that different users reading the same table will see different records.
 The grant mechanism provided by MyRO is similar to that of a Unix file system, that is each record belongs to a `owner` and a `group` and has three sets of permissions associated (for the owner, the users belonging to the group and all other users) that specify whether that record can be read and/or written.
 
+
+[![DOI](https://zenodo.org/badge/190257572.svg)](https://zenodo.org/badge/latestdoi/190257572)
+
+
 See the [documentation](doc/myro.pdf).
 
 MyRO has been developed on the GNU/Linux platform and is released under the GPL license.
